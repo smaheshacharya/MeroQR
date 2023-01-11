@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-from users.serializers import SendPasswordResetEmailSerializer, UserChangePasswordSerializer, UserLoginSerializer, UserPasswordResetSerializer, UserProfileSerializer, UserRegistrationSerializer,UpdateSerializer,UserEmailandSlugSerializer
+from users.serializers import SendPasswordResetEmailSerializer, UserChangePasswordSerializer, UserLoginSerializer, UserPasswordResetSerializer, UserProfileSerializer, UserRegistrationSerializer,UpdateSerializer
 from django.contrib.auth import authenticate
 from users.renderers import UserRenderers
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -61,12 +61,12 @@ class UserProfileView(APIView):
 
 
 
-class UserEmailandSlug(APIView):
-    renderer_classes = [UserRenderers]
-    def get(self, request, format=None):
-        user_email_slug = User.objects.values('email','unique_business_slug')
-        serializer = UserEmailandSlugSerializer(user_email_slug, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+# class UserEmailandSlug(APIView):
+#     renderer_classes = [UserRenderers]
+#     def get(self, request, format=None):
+#         user_email_slug = User.objects.values('email','unique_business_slug')
+#         serializer = UserEmailandSlugSerializer(user_email_slug, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserChangePasswordView(APIView):
@@ -93,7 +93,7 @@ class UserPasswordResetView(APIView):
         serializer = UserPasswordResetSerializer(data=request.data,
         context={'uid':uid, 'token':token})
         serializer.is_valid(raise_exception =True)
-        return Response({'msg':'Password Rest Successfully'}, status=status.HTTP_200_OK)
+        return Response({'msg':'Password Reset Successfully'}, status=status.HTTP_200_OK)
 
 
 class UpdateUserView(APIView):

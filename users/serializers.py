@@ -7,10 +7,9 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type':'password'}, write_only=True )
-    business_logo = serializers.ImageField(max_length=None, allow_empty_file=False,use_url=True)
     class Meta:
         model = User
-        fields=['email','name', 'password', 'password2', 'business_name', 'unique_business_slug','business_logo']
+        fields=['email' ,'password', 'password2']
         extra_kwargs={
             'password':{'write_only':True}
         }
@@ -35,7 +34,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id','email','name','business_name', 'unique_business_slug','business_logo']
+        fields = ['id','email']
     
 class UserChangePasswordSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=225, style={'input_type':'password'},write_only=True)
@@ -65,7 +64,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             user = User.objects.get(email = email)
             uid = urlsafe_base64_encode(force_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
-            link = 'https://localhost:3000/api/user/reset/'+uid+'/'+token
+            link = 'https://localhost:8000/api/user/reset/'+uid+'/'+token
             print('link',link)
             body = 'Click  Following Link to Reset Password '+link
             data = {
@@ -99,7 +98,7 @@ class UserPasswordResetSerializer(serializers.Serializer):
             id = smart_str(urlsafe_base64_decode(uid))
             user = User.objects.get(id=id)
             if not PasswordResetTokenGenerator().check_token(user, token):
-                raise ValidationError('Token is Valid or Expired')
+                raise ValidationError('Token is Invalid or Expired')
 
             user.set_password(password)
             user.save()
@@ -112,11 +111,11 @@ class UserPasswordResetSerializer(serializers.Serializer):
 class UpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id','email','name','business_name', 'unique_business_slug','business_logo']
+        fields = ['id','email']
         
 
-class UserEmailandSlugSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['email','unique_business_slug']
+# class UserEmailandSlugSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['email']
         

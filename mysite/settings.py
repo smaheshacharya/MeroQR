@@ -15,15 +15,17 @@ SECRET_KEY = 'django-insecure-m+f#z7o@$giq7xp1q94k!j=wqn+2@q%q4l*sjenznpaw*aviya
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+APPEND_SLASH=False
 ALLOWED_HOSTS = ['*']
 
 #Email Configuration
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSS')
+# EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSS')
+EMAIL_HOST_USER = "iammaheshacharya@gmail.com"
+EMAIL_HOST_PASSWORD = "Mnismammp41"
 EMAIL_USE_TLS = True
 
 # Application definition
@@ -139,8 +141,8 @@ REST_FRAMEWORK = {
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

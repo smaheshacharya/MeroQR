@@ -8,7 +8,7 @@ class Unit:
         email = EmailMessage(
             subject=data['subject'],
             body=data['body'],
-            from_email = os.os.environ.get('EMAIL_FROM'),
+            from_email = "iammaheshacharya@gmail.com",
             to = [data['to_email']],
         )
         email.send()
