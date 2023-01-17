@@ -174,21 +174,18 @@ class ProductDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class AllProducCategorytList(APIView):
+class AllProducCategorytListPublic(APIView):
     def get(self, request, pk, format=None):
         category_product = CategoryModel.object.filter(user_id=pk)
         serializer = ProductCategorySerializer(category_product, many=True,context={'request': request})
         return Response(serializer.data)
 
-# class AllProducCategorytList(APIView):
-#     def get(self, request, pk, format=None):
-#         query = ResturantModel.object.filter(user_id=pk)
-#         # query = query.only('name')
-#         query = query.select_related('user_id')
-#         # query = query.prefetch_related('reading_lists')
-#         # item = query.get(…)
-#         serializer = ResturantSirializer(query, many=True,context={'request': request})
-#         return Response(serializer.data)
+class AllProducCategorytList(APIView):
+    permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]    
+    def get(self, request, format=None):
+        category = CategoryModel.object.filter(user_id=self.request.user)
+        serializer = ProductCategorySerializer(category, many=True,context={'request': request})
+        return Response(serializer.data)
 
 class ResturantData(APIView):
     def get(self, request, pk, format=None):

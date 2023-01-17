@@ -1,13 +1,14 @@
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from app_qr.views import CategoryList, CategoryDetail, ProductDetail, ProductList, AllProducCategorytList, ResturantData, ResturantList, ResturantDetail,QrList, AllCategory,AllProduct
+from app_qr.views import CategoryList,CategoryDetail, ProductDetail, ProductList, AllProducCategorytList, ResturantData, ResturantList, ResturantDetail,QrList, AllCategory,AllProduct,AllProducCategorytListPublic
 
 
 
 urlpatterns = [
 
-    path('allproductscategory/<int:pk>', AllProducCategorytList.as_view(), name='allproducts'),
+    path('allproductscategorypublic/<int:pk>', AllProducCategorytListPublic.as_view(), name='allproductspublic'),
+    path('allproductscategory/', AllProducCategorytList.as_view(), name='allproducts'),
     path('category/', CategoryList.as_view(), name='category-create'),
     path('category/<int:pk>', CategoryDetail.as_view(), name='category'),
     path('product/', ProductList.as_view(), name='product-create'),
