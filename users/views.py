@@ -79,7 +79,7 @@ class UserChangePasswordView(APIView):
         return Response({'msg':'Password Change Success'}, status= status.HTTP_200_OK)
 
 
-class SendPasswordResetView(APIView):
+class   SendPasswordResetView(APIView):
     renderer_classes = [UserRenderers]
     def post(self, request, fromat=None):
         serializer = SendPasswordResetEmailSerializer(data=request.data)

@@ -19,14 +19,19 @@ APPEND_SLASH=False
 ALLOWED_HOSTS = ['*']
 
 #Email Configuration
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-# EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSS')
-EMAIL_HOST_USER = "iammaheshacharya@gmail.com"
-EMAIL_HOST_PASSWORD = "Mnismammp41"
-EMAIL_USE_TLS = True
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# # EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+# # EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSS')
+# EMAIL_HOST_USER = "mahesh@achsnepal.edu.np"
+# EMAIL_HOST_PASSWORD = "9861007803"
+# EMAIL_USE_TLS = True
+
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = '54babca283b38b'
+EMAIL_HOST_PASSWORD = '418f47041f94be'
+EMAIL_PORT = '2525'
 
 # Application definition
 
@@ -62,7 +67,7 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
