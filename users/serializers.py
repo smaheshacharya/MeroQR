@@ -68,11 +68,11 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             uid = urlsafe_base64_encode(force_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
             # html = render_to_string('templates/abc.html',{"token":token})
-            link = 'https://localhost:3000/user/reset/'+uid+'/'+token
+            link = 'https://localhost:3000/user/reset/' + uid + '/' +token
             print('link',link)
-            body = "Click  Following Link to Reset Password "+ link
+            body = 'Click  Following Link to Reset Password '+link
             data = {
-                'subject':'Reset Your Password',
+                'subject':'MeorQR => Reset Your Password',
                 'body':body,
                 'to_email':user.email
             }
