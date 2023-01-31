@@ -24,7 +24,6 @@ class Resturant(models.Model):
 class Category(models.Model):
     cat_name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=100,blank=False,unique=True)
-    cat_description = models.TextField()
     cat_image = models.ImageField(upload_to='cat_pic', blank=False, null=False)
     user_id = models.ForeignKey('users.User', on_delete=models.CASCADE)
 
@@ -33,14 +32,13 @@ class Category(models.Model):
         return self.cat_name
 
     object = models.Manager()
-    REQUIRED_FIELDS = ['cat_name','slug','cat_description','cat_image','resturant']
+    REQUIRED_FIELDS = ['cat_name','slug','cat_image','resturant']
 
 
 class Product(models.Model):
     category_id = models.ForeignKey(Category, blank=False, null=False, default="", related_name='products', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
     price = models.FloatField()
-    pro_description = models.TextField()
     pro_pic = models.ImageField(upload_to='pro_pic', blank=False, null=False)
     user_id = models.ForeignKey('users.User', on_delete=models.CASCADE)
 
@@ -49,7 +47,7 @@ class Product(models.Model):
         return self.name
 
     object = models.Manager()
-    REQUIRED_FIELDS = ['name','price','pro_description','pro_pic', 'category_id','resturant']
+    REQUIRED_FIELDS = ['name','price','pro_pic', 'category_id','resturant']
 
 
 
