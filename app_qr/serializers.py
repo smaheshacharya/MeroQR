@@ -8,7 +8,7 @@ from .models import Resturant
 class ResturantSirializer(serializers.ModelSerializer):
     class Meta:
         model = Resturant
-        fields = ('id','name','slug','sub_title','timing', 'phone_number','description','logo','cover_image')
+        fields = ('id','name','slug','sub_title','timing', 'phone_number','description','logo','cover_image','user_id')
         read_only_field = ('id','user_id')
 
 class QrSirializer(serializers.ModelSerializer):
