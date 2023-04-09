@@ -4,6 +4,7 @@ from django.forms import BooleanField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+
 class Resturant(models.Model):
     user_id = models.OneToOneField('users.User', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
@@ -32,7 +33,7 @@ class Category(models.Model):
         return self.cat_name
 
     object = models.Manager()
-    REQUIRED_FIELDS = ['cat_name','slug','cat_image','resturant']
+    REQUIRED_FIELDS = ['cat_name','slug','cat_image']
 
 
 class Product(models.Model):
@@ -47,7 +48,7 @@ class Product(models.Model):
         return self.name
 
     object = models.Manager()
-    REQUIRED_FIELDS = ['name','price','pro_pic', 'category_id','resturant']
+    REQUIRED_FIELDS = ['name','price','pro_pic', 'category_id']
 
 
 

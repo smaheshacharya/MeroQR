@@ -1,14 +1,28 @@
-from django.core.mail import EmailMessage
-import os
+from django.conf import settings
+from twilio.rest import Client
+from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
+from django.conf import settings
+ 
 
+class MessageHandler:
+    phone_number=None
+    otp=None
+    def __init__(self,phone_number,otp) -> None:
+        self.phone_number = '+977'+phone_number
+        self.otp_number = otp
+        print("messge from message handller", self.phone_number)
 
-class Util:
-    @staticmethod
-    def send_email(data):
-        email = EmailMessage(
-            subject=data['subject'],
-            body=data['body'],
-            from_email = "iammaheshacharya@gmail.com",
-            to = [data['to_email']],
-        )
-        email.send()
+    def send_otp_on_phone(self):
+         
+        client = Client(settings.ACCOUNT_SSID, settings.AUTH_TOKEN)
+        try:
+            message = client.messages.create(
+                                body=f'Your OTP is  {self.otp_number}',
+                                from_=settings.VERIFY_NUMBER,
+                                to=self.phone_number
+                            )
+        except TwilioRestException as err:
+            # Implement your fallback code here
+            print(err)
+    

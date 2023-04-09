@@ -18,6 +18,12 @@ DEBUG = True
 APPEND_SLASH=False
 ALLOWED_HOSTS = ['*']
 
+
+ACCOUNT_SSID= "ACdfe21edc305ab22e9f5376931ba647ca"
+AUTH_TOKEN = "f97052d5caa7b43f2153ede8cbc46134"
+VERIFY_SSID = "VAc2d957d0127dae30e177452de58f295e"
+VERIFY_NUMBER = "+14406353538"
+
 #Email Configuration
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # EMAIL_HOST = 'smtp.gmail.com'
@@ -93,6 +99,9 @@ DATABASES = {
     }
 }
 
+# AUTHENTICATION_BACKENDS = [
+#     "django.contrib.auth.backends.ModelBackend", # this line fixed my problem
+# ]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

@@ -4,18 +4,17 @@ from rest_framework import serializers
 from users.models import User 
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from .utils import Util
 from django.template.loader import render_to_string
-
+ 
+ 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
+    # otp_code = serializers.CharField(write_only=True, required=True, max_length=4)
     password2 = serializers.CharField(style={'input_type':'password'}, write_only=True )
     class Meta:
         model = User
-        fields=['email' ,'password', 'password2']
-        extra_kwargs={
-            'password':{'write_only':True}
-        }
+        fields=['phone' ,'password', 'password2']
+        
     
     def validate(self,attrs):
         password = attrs.get('password')
@@ -26,18 +25,21 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validate_data):
         return User.objects.create_user(**validate_data)
+       
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(max_length=255)
+    phone = serializers.CharField(max_length=255)
     class Meta:
         model = User
-        fields = ['email','password']
+        fields = ['phone','password']
+
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id','email']
+        fields = ['id','phone']
     
 class UserChangePasswordSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=225, style={'input_type':'password'},write_only=True)
@@ -113,7 +115,7 @@ class UserPasswordResetSerializer(serializers.Serializer):
 class UpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id','email']
+        fields = ['id','phone']
         
 
 # class UserEmailandSlugSerializer(serializers.ModelSerializer):

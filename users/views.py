@@ -1,21 +1,36 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
+import pyotp
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from users.serializers import SendPasswordResetEmailSerializer, UserChangePasswordSerializer, UserLoginSerializer, UserPasswordResetSerializer, UserProfileSerializer, UserRegistrationSerializer,UpdateSerializer
 from django.contrib.auth import authenticate
 from users.renderers import UserRenderers
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated
 from users.models import User 
-from django.shortcuts import render, get_object_or_404
 from django.http import Http404
+from .utils import MessageHandler
 
+
+
+
+class generateKey:
+    @staticmethod
+    def returnValue():
+        secret = pyotp.random_base32()        
+        totp = pyotp.TOTP(secret, interval=300)
+        OTP = totp.now()
+        return {"totp":secret,"otp":OTP}
 
 
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
-
     return {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
@@ -23,33 +38,95 @@ def get_tokens_for_user(user):
 
     }
 
-class UserRegistrationView(APIView):
-    renderer_classes = [UserRenderers]
-    def post(self, request, format=None):
-        serializer = UserRegistrationSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        token = get_tokens_for_user(user)
-        return Response(
-                {'token':token, 'msg':'Registration Success'},
-                status= status.HTTP_201_CREATED
-            )
-        
 
+@api_view(['POST'])
+@permission_classes([AllowAny,])
+def signupVerify(request,otp):
+    try:
+        user = User.objects.get(otp = otp)
+        _otp = int(user.otp)
+        print("otp from db",type(_otp))
+        print("otp from frontend", type(otp))
+        if otp != _otp:
+            return Response({"Msg" : "Invalid otp"},status=status.HTTP_406_NOT_ACCEPTABLE)
+        else:
+            activation_key = user.activation_key
+            totp = pyotp.TOTP(activation_key, interval=300)
+            verify = totp.verify(otp)
+            
+            if verify:
+                user.user_active     = True
+                user.save()
+                
+                return Response({"Msg" : "Your account has been successfully activated!!"})
+            else:
+                return Response({"Msg" : "Given otp is expired!!"})
+    
+    except:
+        return Response({"Msg" : "Invalid otp OR No any active user found for given otp"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny,])
+def signup(request):
+    serializer = UserRegistrationSerializer(data=request.data)
+    # print(serializer)
+
+    if serializer.is_valid():
+        key = generateKey.returnValue()
+      
+
+        user = User(
+            phone = serializer.data['phone'],
+            otp = key['otp'],
+            activation_key = key['totp'],
+
+        )
+        user.set_password(serializer.data['password'])
+        user.save()
+        message_handeller = MessageHandler(serializer.data['phone'], key['otp']).send_otp_on_phone()
+        print("message_handeller",message_handeller)
+
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+       
+
+
+# class UserRegistrationView(APIView):
+#     renderer_classes = [UserRenderers]
+#     def post(self, request, phone, format=None):
+#         serializer = UserRegistrationSerializer(data=request.data)
+#         print("print data from user registration", serializer)
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.save()
+        
+#         token = get_tokens_for_user(user)
+        
+#         return Response(
+#                 {'token':token, 'msg':'Registration Success'},
+#                 status= status.HTTP_201_CREATED
+#             )
+       
 
 class UserLoginView(APIView):
     renderer_classes = [UserRenderers]
     def post(self, request, format=None):
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        email = serializer.data.get('email')
+        phone = serializer.data.get('phone')
         password = serializer.data.get('password')
-        user = authenticate(email=email,password=password)
+        user = authenticate(phone=phone,password=password)
+        if not user.user_active:
+            return Response({'errors':{'non_field_errors':['Verify you phone number first then try again.']}}, status= status.HTTP_404_NOT_FOUND)
         if user is not None:
             token = get_tokens_for_user(user)
-            return Response({'token':token, 'msg':'Login Success'}, status= status.HTTP_200_OK)
+            return Response({'token':token, 'msg':'Login Success','user_id':user.id}, status= status.HTTP_200_OK)
         else:
-            return Response({'errors':{'non_field_errors':['Email or Password is not Valid']}}, status= status.HTTP_404_NOT_FOUND)
+            return Response({'errors':{'non_field_errors':['Phone or Password is not Valid']}}, status= status.HTTP_404_NOT_FOUND)
 
 
 class UserProfileView(APIView):
@@ -61,12 +138,6 @@ class UserProfileView(APIView):
 
 
 
-# class UserEmailandSlug(APIView):
-#     renderer_classes = [UserRenderers]
-#     def get(self, request, format=None):
-#         user_email_slug = User.objects.values('email','unique_business_slug')
-#         serializer = UserEmailandSlugSerializer(user_email_slug, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class UserChangePasswordView(APIView):
@@ -79,7 +150,7 @@ class UserChangePasswordView(APIView):
         return Response({'msg':'Password Change Success'}, status= status.HTTP_200_OK)
 
 
-class   SendPasswordResetView(APIView):
+class SendPasswordResetView(APIView):
     renderer_classes = [UserRenderers]
     def post(self, request, fromat=None):
         serializer = SendPasswordResetEmailSerializer(data=request.data)
