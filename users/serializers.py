@@ -10,18 +10,18 @@ from django.template.loader import render_to_string
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     # otp_code = serializers.CharField(write_only=True, required=True, max_length=4)
-    password2 = serializers.CharField(style={'input_type':'password'}, write_only=True )
+    # password2 = serializers.CharField(style={'input_type':'password'}, write_only=True )
     class Meta:
         model = User
-        fields=['phone' ,'password', 'password2']
+        fields=['phone' ,'password']
         
     
-    def validate(self,attrs):
-        password = attrs.get('password')
-        password2 = attrs.get('password2')
-        if password != password2:
-            raise serializers.ValidationError("Password and Confirm Password doesn't match")
-        return super().validate(attrs)
+    # def validate(self,attrs):
+    #     password = attrs.get('password')
+    #     password2 = attrs.get('password2')
+    #     if password != password2:
+    #         raise serializers.ValidationError("Password and Confirm Password doesn't match")
+    #     return super().validate(attrs)
 
     def create(self, validate_data):
         return User.objects.create_user(**validate_data)

@@ -19,7 +19,7 @@ from django.shortcuts import render, get_object_or_404
 class CategoryList(APIView):
     permission_classes = [IsOwnerOrReadOnly, IsAuthenticatedOrReadOnly]    
     def get(self, request, format=None):
-        category = CategoryModel.object.filter(user_id=self.request.user)
+        category = CategoryModel.object.filter(user_id=self.request.user).order_by ('-id')
         serializer = CategorySerializer(category, many=True,context={'request': request})
         return Response(serializer.data)
 
@@ -73,7 +73,7 @@ class QrList(APIView):
 class ProductList(APIView):
     permission_classes = [IsOwnerOrReadOnly,IsAuthenticatedOrReadOnly]    
     def get(self, request, format=None):
-        product = ProductModel.object.filter(user_id=self.request.user)
+        product = ProductModel.object.filter(user_id=self.request.user).order_by ('-id')
         serializer = ProductSerializer(product, many=True,context={'request': request})
         return Response(serializer.data)
 
@@ -176,7 +176,7 @@ class ProductDetail(APIView):
 
 class AllProducCategorytListPublic(APIView):
     def get(self, request, pk, format=None):
-        category_product = CategoryModel.object.filter(user_id=pk)
+        category_product = CategoryModel.object.filter(user_id=pk).order_by ('-id')
         serializer = ProductCategorySerializer(category_product, many=True,context={'request': request})
         return Response(serializer.data)
 

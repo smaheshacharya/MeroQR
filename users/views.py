@@ -23,7 +23,7 @@ class generateKey:
     @staticmethod
     def returnValue():
         secret = pyotp.random_base32()        
-        totp = pyotp.TOTP(secret, interval=300)
+        totp = pyotp.TOTP(secret, interval=60)
         OTP = totp.now()
         return {"totp":secret,"otp":OTP}
 
@@ -51,19 +51,19 @@ def signupVerify(request,otp):
             return Response({"Msg" : "Invalid otp"},status=status.HTTP_406_NOT_ACCEPTABLE)
         else:
             activation_key = user.activation_key
-            totp = pyotp.TOTP(activation_key, interval=300)
+            totp = pyotp.TOTP(activation_key, interval=60)
             verify = totp.verify(otp)
             
             if verify:
-                user.user_active     = True
+                user.user_active = True
                 user.save()
                 
                 return Response({"Msg" : "Your account has been successfully activated!!"})
             else:
-                return Response({"Msg" : "Given otp is expired!!"})
+                return Response({"Error" : "Given otp is expired!!"})
     
     except:
-        return Response({"Msg" : "Invalid otp OR No any active user found for given otp"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"Error" : "Invalid otp OR No any active user found for given otp"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -120,8 +120,8 @@ class UserLoginView(APIView):
         phone = serializer.data.get('phone')
         password = serializer.data.get('password')
         user = authenticate(phone=phone,password=password)
-        if not user.user_active:
-            return Response({'errors':{'non_field_errors':['Verify you phone number first then try again.']}}, status= status.HTTP_404_NOT_FOUND)
+        if user and not user.user_active:
+            return Response({'errors':{'non_field_errors':['Verify your phone number first then try again.']}}, status= status.HTTP_404_NOT_FOUND)
         if user is not None:
             token = get_tokens_for_user(user)
             return Response({'token':token, 'msg':'Login Success','user_id':user.id}, status= status.HTTP_200_OK)
