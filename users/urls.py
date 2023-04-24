@@ -10,11 +10,8 @@ urlpatterns = [
     path('login/', UserLoginView.as_view(), name='login'),
     path('profile/', UserProfileView.as_view(), name='profile'),
     path('changepassword/', UserChangePasswordView.as_view(), name='changepassword'),
-    path('send-reset-password-otp/', SendPasswordResetView.as_view(), name='change-reset-password-email'),
+    path('send-reset-password-otp/', SendPasswordResetView.as_view(), name='send-reset-password-otp'),
     path('reset-password/<uid>/<token>/', UserPasswordResetView.as_view(), name='reset-password'),
-    path('user-update/<int:pk>/', UpdateUserView.as_view(), name='user-update'),
-
-
-    
+    path('user-update/<int:pk>/', UpdateUserView.as_view(), name='user-update'),  
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -24,20 +24,7 @@ AUTH_TOKEN = "f97052d5caa7b43f2153ede8cbc46134"
 VERIFY_SSID = "VAc2d957d0127dae30e177452de58f295e"
 VERIFY_NUMBER = "+14406353538"
 
-#Email Configuration
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# # EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-# # EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSS')
-# EMAIL_HOST_USER = "mahesh@achsnepal.edu.np"
-# EMAIL_HOST_PASSWORD = "9861007803"
-# EMAIL_USE_TLS = True
 
-EMAIL_HOST = 'smtp.mailtrap.io'
-EMAIL_HOST_USER = '54babca283b38b'
-EMAIL_HOST_PASSWORD = '418f47041f94be'
-EMAIL_PORT = '2525'
 
 # Application definition
 
@@ -94,17 +81,15 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'meroqr',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'db',
+        'PORT': '3306',
     }
 }
 
-# AUTHENTICATION_BACKENDS = [
-#     "django.contrib.auth.backends.ModelBackend", # this line fixed my problem
-# ]
-
-# Password validation
-# https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -146,10 +131,7 @@ REST_FRAMEWORK = {
     
 }
 
-# AllowAny
-# IsAuthenticated
-# IsAdminUser
-# IsAuthenticatedOrReadOnly
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -184,12 +166,6 @@ SIMPLE_JWT = {
  
 PASSWORD_RESET_TIMEOUT = 900
 
-# CORS_ALLOWED_ORIGINS = [
-#     "https://example.com",
-#     "https://sub.example.com",
-#     "http://localhost:3000",
-#     "http://127.0.0.1:3000",
-# ]
 
 CORS_ORIGIN_ALLOW_ALL = True
 CSRF_TRUSTED_ORIGINS = (

@@ -6,19 +6,19 @@ class UserRenderers(renderers.JSONRenderer):
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         response = ''
-        if 'ErrorDetail' in str(data):
-            response = json.dumps({'errors':data})
-        else:
-            response = json.dumps(data)
-        return response
+        return (
+            json.dumps({'errors': data})
+            if 'ErrorDetail' in str(data)
+            else json.dumps(data)
+        )
 
 class ProductRenderers(renderers.JSONRenderer):
     charset = 'utf-8'
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         response = ''
-        if 'ErrorDetail' in str(data):
-            response = json.dumps({'errors':data})
-        else:
-            response = json.dumps(data)
-        return response
+        return (
+            json.dumps({'errors': data})
+            if 'ErrorDetail' in str(data)
+            else json.dumps(data)
+        )

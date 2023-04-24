@@ -9,12 +9,10 @@ class MessageHandler:
     phone_number=None
     otp=None
     def __init__(self,phone_number,otp) -> None:
-        self.phone_number = '+977'+phone_number
+        self.phone_number = f'+977{phone_number}'
         self.otp_number = otp
-        print("messge from message handller", self.phone_number)
 
     def send_otp_on_phone(self):
-         
         client = Client(settings.ACCOUNT_SSID, settings.AUTH_TOKEN)
         try:
             message = client.messages.create(

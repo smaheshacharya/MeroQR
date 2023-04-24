@@ -8,3 +8,4 @@ django-dotenv==1.4.2
 django-cleanup==6.0.0
 pyotp==2.8.0
 twilio==7.17.0
+mysqlclient>=2.0
