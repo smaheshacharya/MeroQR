@@ -19,9 +19,6 @@ urlpatterns = [
     path('resturant/<int:pk>', ResturantDetail.as_view(), name='resturant'),
     path('resturant-data/', ResturantData.as_view(), name='resturant'),
     path('qr/', QrList.as_view(), name='qr'),
-
-
-
-    
+  
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
