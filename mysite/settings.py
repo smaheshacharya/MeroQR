@@ -53,7 +53,9 @@ INSTALLED_APPS = [
     'users',
     'rest_framework_simplejwt',
     'corsheaders',
-    'django_cleanup'
+    'django_cleanup',
+    'django_extensions',
+
 
 ]
  
@@ -184,12 +186,7 @@ SIMPLE_JWT = {
  
 PASSWORD_RESET_TIMEOUT = 900
 
-# CORS_ALLOWED_ORIGINS = [
-#     "https://example.com",
-#     "https://sub.example.com",
-#     "http://localhost:3000",
-#     "http://127.0.0.1:3000",
-# ]
+
 
 CORS_ORIGIN_ALLOW_ALL = True
 CSRF_TRUSTED_ORIGINS = (

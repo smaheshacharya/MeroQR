@@ -13,7 +13,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from django.http import Http404
-from django.shortcuts import render, get_object_or_404
 
 
 class CategoryList(APIView):
@@ -80,7 +79,9 @@ class ProductList(APIView):
     def post(self, request, format=None):
         data = request.data
         if isinstance(data, list):
-            serializer = ProductSerializer(data=request.data, many=True)
+            print(data)
+            serializer = ProductSerializer(data=data, many=True)
+
         else:
             serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
@@ -96,8 +97,8 @@ class CategoryDetail(APIView):
     def get_object(self, pk):
         try:
             return CategoryModel.object.get(pk=pk)
-        except CategoryModel.DoesNotExist:
-            raise Http404
+        except CategoryModel.DoesNotExist as e:
+            raise Http404 from e
 
     def get(self, request, pk, format=None):
         category = self.get_object(pk)
@@ -124,8 +125,8 @@ class ResturantDetail(APIView):
     def get_object(self, pk):
         try:
             return ResturantModel.object.get(pk=pk)
-        except ResturantModel.DoesNotExist:
-            raise Http404
+        except ResturantModel.DoesNotExist as e:
+            raise Http404 from e
 
     def get(self, request, pk, format=None):
         resturant = self.get_object(pk)
@@ -152,8 +153,8 @@ class ProductDetail(APIView):
     def get_object(self, pk):
         try:
             return ProductModel.object.get(pk=pk)
-        except ProductModel.DoesNotExist:
-            raise Http404
+        except ProductModel.DoesNotExist as e:
+            raise Http404 from e
             
     def get(self, request, pk, format=None):
         product = self.get_object(pk)
@@ -176,7 +177,7 @@ class ProductDetail(APIView):
 
 class AllProducCategorytListPublic(APIView):
     def get(self, request, pk, format=None):
-        category_product = CategoryModel.object.filter(user_id=pk).order_by ('-id')
+        category_product = CategoryModel.object.filter(user_id=pk).order_by ('id')
         serializer = ProductCategorySerializer(category_product, many=True,context={'request': request})
         return Response(serializer.data)
 
